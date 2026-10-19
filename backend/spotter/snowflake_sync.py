@@ -64,7 +64,7 @@ def sync(connection, rows: list[dict]) -> int:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--database', default=os.environ.get('SPOTTER_DATABASE', str(ROOT / 'backend/data/spotter.sqlite3')))
+    parser.add_argument('--database', default=os.environ.get('SPOTTER_DATABASE', str(ROOT / 'data/spotter.sqlite3')))
     parser.add_argument('--dry-run', action='store_true', help='Validate local extraction; print only counts, without connecting')
     args = parser.parse_args()
     rows = extract(args.database)

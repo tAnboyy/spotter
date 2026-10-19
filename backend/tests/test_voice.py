@@ -6,8 +6,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.app import create_app
-from backend.models import Action
-from backend.tool_contract import tool_specifications
+from backend.spotter.models import Action
+from backend.spotter.tool_contract import tool_specifications
 
 
 @pytest.fixture
@@ -108,7 +108,7 @@ def test_exported_tools_match_backend_and_client():
 
 def test_optional_tool_targets_only_for_session_actions():
     from pydantic import ValidationError
-    from backend.tool_contract import SubmitWorkoutAction
+    from backend.spotter.tool_contract import SubmitWorkoutAction
     for kind in ("end_session", "retry_deferred"):
         args = SubmitWorkoutAction.model_validate({"action": kind})
         assert args.exercise_instance_id is None and args.set_index is None

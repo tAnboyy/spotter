@@ -7,9 +7,9 @@ from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
-from backend.database import Connection, Database
-from backend.engine import TransitionError, expire_rest, new_session, summary, transition, utc_now
-from backend.models import CreateSession, Event, Preferences, ProfileUpdate, ScheduleUpdate
+from .database import Connection, Database
+from .engine import TransitionError, expire_rest, new_session, summary, transition, utc_now
+from .models import CreateSession, Event, Preferences, ProfileUpdate, ScheduleUpdate
 
 
 class StoreError(Exception):

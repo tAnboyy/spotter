@@ -39,8 +39,8 @@ $env:SNOWFLAKE_CONNECTION_NAME = 'spotter'
 Inspect counts locally, then sync:
 
 ```sh
-python -m backend.snowflake_sync --dry-run
-python -m backend.snowflake_sync
+python -m backend.spotter.snowflake_sync --dry-run
+python -m backend.spotter.snowflake_sync
 ```
 
 Use `--database path/to/spotter.sqlite3` when needed. The source opens read-only and a missing path fails without creating a database. The sync creates `SPOTTER_WORKOUT_EVENTS` and replaces the dedicated `SPOTTER_EQUIPMENT_INSIGHTS` view; it prints queried Snowflake results only after sync succeeds. Connection/authentication/SQL failures exit unsuccessfully. Run only one sync operator at a time: standard Snowflake tables do not enforce unique keys. Sequential retries use MERGE on session/event IDs and do not append duplicate events. Every run scans all accepted events; appropriate for the hackathon, not a large production dataset. Local deletion does not delete already exported cloud rows.

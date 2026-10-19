@@ -2,8 +2,8 @@ from types import SimpleNamespace
 
 import pytest
 
-import backend.app as app_module
-from backend.database import Database
+import backend.spotter.app as app_module
+from backend.spotter.database import Database
 
 
 def test_database_selection_priority(monkeypatch):

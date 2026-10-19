@@ -43,7 +43,7 @@ cp -n backend/.env.example backend/.env
 
 `backend/tool_contract.py` defines canonical agent arguments. `python scripts/export_contracts.py` regenerates `agent/tools.json`, `contracts/client-tools.json`, HTTP schemas and OpenAPI. Existing frontend names and arguments are preserved. Map `current.instance_id` to action argument `exercise_instance_id`; map `current.id` to guidance argument `exercise_id`. Dashboard target parameters are optional: omit them for end/retry; the handler normalizes omitted values to null. Exercise actions still require both current targets. Read-only tools return state/catalog data; submit returns `{success:true,snapshot}` or `{success:false,error}` as JSON strings from the browser handler.
 
-`catalog/demo.json` is the runtime guidance source for 18 configured machines: setup, cue, mistake, troubleshooting, stop conditions, muscles, approved alternatives, equipment, location and source URLs. Avoid a second coaching catalog or provider knowledge-base copy that can drift. Content is source-backed and developer-paraphrased but remains pending professional review. Mat must admit when a question exceeds that content. See `agent/GUIDANCE.md` for the review checklist.
+`backend/catalog/demo.json` is the runtime guidance source for 18 configured machines: setup, cue, mistake, troubleshooting, stop conditions, muscles, approved alternatives, equipment, location and source URLs. Avoid a second coaching catalog or provider knowledge-base copy that can drift. Content is source-backed and developer-paraphrased but remains pending professional review. Mat must admit when a question exceeds that content. See `agent/GUIDANCE.md` for the review checklist.
 
 ## Live acceptance
 

@@ -4,8 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.app import CATALOG, create_app
-from backend.models import ProfileUpdate, ScheduleUpdate
-from backend.store import Store
+from backend.spotter.models import ProfileUpdate, ScheduleUpdate
+from backend.spotter.store import Store
 
 
 def workout(weekday=0, time='18:00'):

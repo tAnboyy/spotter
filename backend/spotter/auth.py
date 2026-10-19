@@ -4,7 +4,7 @@ import httpx
 from fastapi import HTTPException
 from pydantic import ValidationError
 
-from backend.models import GoogleAuthRequest
+from .models import GoogleAuthRequest
 
 
 def google_auth_configured() -> bool:

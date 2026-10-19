@@ -7,9 +7,9 @@ import pytest
 from pydantic import ValidationError
 
 from backend.app import CATALOG, create_app
-from backend.models import CreateSession, Event, Snapshot, WeightChange
-from backend.store import Store, StoreError
-from backend.tool_contract import SubmitWorkoutAction
+from backend.spotter.models import CreateSession, Event, Snapshot, WeightChange
+from backend.spotter.store import Store, StoreError
+from backend.spotter.tool_contract import SubmitWorkoutAction
 from fastapi.testclient import TestClient
 
 

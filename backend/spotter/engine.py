@@ -3,7 +3,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
-from backend.models import Action, CreateSession, Event, PlanRequest
+from .models import Action, CreateSession, Event, PlanRequest
 
 
 def utc_now() -> datetime:

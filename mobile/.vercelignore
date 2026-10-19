@@ -1,0 +1,11 @@
+# Generated native projects are not part of the website.
+/ios/
+/android/
+/node_modules/
+/.expo/
+/dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log

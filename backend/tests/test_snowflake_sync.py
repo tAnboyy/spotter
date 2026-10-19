@@ -4,9 +4,9 @@ from uuid import uuid4
 import pytest
 
 from backend.app import CATALOG
-from backend.models import CreateSession, Event
-from backend.snowflake_sync import extract
-from backend.store import Store, StoreError
+from backend.spotter.models import CreateSession, Event
+from backend.spotter.snowflake_sync import extract
+from backend.spotter.store import Store, StoreError
 
 
 def action(state, kind):

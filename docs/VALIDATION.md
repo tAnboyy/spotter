@@ -369,3 +369,33 @@ PASS: JSON/TOML configuration parsing and git diff --check. NOT RUN: Vercel host
 Restored root vercel.json byte-for-byte to the checked-in frontend configuration. Added backend/vercel.json as an alternate FastAPI config for CLI selection from repository root; retained root pyproject entrypoint and requirements forwarding. Updated README/deployment/plan to document separate projects and explicit backend config selection. No runtime code, client contracts, data or provider changes.
 
 PASS: root config matches HEAD; JSON/TOML parsing, dependency include paths and git diff --check. NOT RUN: actual Vercel backend/frontend deployments. Root frontend install/export was validated earlier; unchanged commands were not repeated. Backend project uses --local-config backend/vercel.json from repo root, not backend/ as root. Nested config alone does not configure Git deployments. No commit, push or deploy.
+
+
+## Independent Vercel application roots — October 19, 2026
+
+Human approved the clean monorepo structure for frontend and backend on separate
+Vercel projects. This supersedes all prior root/alternate-config/staging guidance.
+Owner: Thanmay/macOS, Node 24.13.1, Python 3.14, local PostgreSQL 18.
+
+Changes: moved frontend config and environment guard into mobile/; moved backend
+pyproject into backend/ with app:app entrypoint; removed root deployment files.
+Backend runtime is now backend/spotter with relative imports, catalog lives in
+backend/catalog, migration SQL in backend/spotter/migrations. backend/app.py
+retains the repository import facade and provides the standalone entrypoint.
+Updated test/export imports and affected runbooks/ownership paths; added per-app
+.vercelignore files. Existing ignored .env/SQLite files and backup remain intact.
+
+- PASS: `SPOTTER_TEST_DATABASE_URL=postgresql://spotter_test@127.0.0.1:55439/spotter_test .venv/bin/python -m pytest backend/tests -q` — 98 passed, one existing AnyIO deprecation warning. Includes all PostgreSQL rules, migration/rollback, concurrency and the new isolated deployment-root test.
+- PASS: isolated root subprocess uses only copied backend app/package/catalog/config files; -I excludes repository import paths. Validated /health, /catalog (18 entries), /openapi.json, real session events/WebSocket updates, migration initialization, restart persistence and server rest expiry using temporary SQLite. The test compares equivalent UTC timestamps as datetimes.
+- PASS: mobile `npm run typecheck`, `npm run lint -- --no-cache`.
+- PASS: from mobile/, `node scripts/check_web_deploy.mjs && npm run export:web` with explicit placeholder HTTPS API/Google client ID. Export includes /, /watch, sitemap and not-found. Existing Three.js CommonJS warning remains; placeholders do not validate live services.
+- PASS: `DATABASE_URL='' SPOTTER_DATABASE=/private/tmp/spotter-contract-export.sqlite3 .venv/bin/python scripts/export_contracts.py`; generated contracts/tool definitions have no diff.
+- PASS: catalog/migration SQL byte comparison against pre-move Git versions; config JSON/TOML checks; per-app ignore checks exclude Pods/native output, local data, secrets and caches while preserving runtime assets and required manifests.
+- PASS: git diff --check.
+- NOT RUN: hosted Vercel builds, production API/Neon workflows, cross-origin Google sign-in, live voice and native runtime. Local WebSocket success does not establish Vercel WebSocket acceptance. No personal records copied to Neon.
+
+Next: commit all moves/configs together, configure frontend Root Directory mobile
+and backend Root Directory backend, clear old npm/Expo overrides on backend,
+connect both projects to the same Git branch and deploy that new commit. Use
+frontend/public and backend/private environment settings in docs/DEPLOYMENT.md.
+No commit, push, deployment or external configuration changes performed here.

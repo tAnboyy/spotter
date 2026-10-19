@@ -11,10 +11,11 @@ persisted rests on server reads/actions rather than idle polling. Importing exis
 personal records is a distinct transfer; local backup remains intact. Cloud
 acceptance requires evidence beyond local PostgreSQL tests.
 
-Hosting update (October 19): export the web app to Vercel using root deployment
-configuration. Keep the authoritative FastAPI backend on a single-process host with Neon
-PostgreSQL, or persistent local SQLite; see `docs/DEPLOYMENT.md`. Hosted acceptance remains pending
-until the public API, Google sign-in, synchronization and live voice are checked.
+Hosting update (October 19): frontend and backend use separate Git-connected
+Vercel projects with Root Directory mobile and backend respectively. Each has
+its own configuration and runtime files; no repository-root Vercel config is
+needed. Hosted API, Google, transport and live voice acceptance remain pending.
+See docs/DEPLOYMENT.md. This supersedes earlier deployment-layout notes below.
 
 Web muscle visualization update (October 11): start the existing 3D anatomy automatically. Remove the web 2D view and mode switch. On failure, show an error and Retry with muscle buttons still usable; preserve selection across retries. Native rendering is unchanged.
 
@@ -52,7 +53,7 @@ One Expo/React Native TypeScript app under `mobile/` serves web and iOS. Shared 
 Repository ownership:
 
 - Thanmay: `mobile/`, `watch/`, `docs/DEMO.md`, `docs/DEVICE_CHECKS.md`.
-- Teammate: `backend/`, `catalog/`, `agent/`, `contracts/`, `docs/API.md`.
+- Teammate: `backend/`, `backend/catalog/`, `agent/`, `contracts/`, `docs/API.md`.
 - Shared: this plan, README, validation record, submission checklist.
 
 Thanmay owns app-level agent tool handlers; teammate owns matching agent definitions. Agree on names/arguments together. Each owner edits dependency manifests/lockfiles only in their area. Teammate can run web on Windows using the shared code; Thanmay validates native builds on Mac. No separate web product or duplicate workout engine.
@@ -276,3 +277,12 @@ Hosting correction (October 19): the human clarified that this Vercel project is
 
 
 Final hosting clarification (October 19): both frontend and backend target separate Vercel projects. Root vercel.json remains frontend; backend/vercel.json is selected explicitly with CLI --local-config from repository root. This supersedes the backend-only correction. Git backend auto-deployment is not automatically configured by a nested file. See docs/DEPLOYMENT.md. Hosted acceptance remains pending.
+
+
+Final monorepo layout (October 19): backend runtime lives in backend/spotter,
+with backend/app.py as the independent ASGI entrypoint and repository-import
+compatibility facade. Catalog moved to backend/catalog, migration SQL to
+backend/spotter/migrations. Frontend config and environment guard live inside
+mobile. Root deployment configs removed. Both projects now use ordinary Git
+integration with their own Root Directory; earlier CLI alternate-config/staging
+instructions are superseded. No hosted acceptance is inferred from this layout.

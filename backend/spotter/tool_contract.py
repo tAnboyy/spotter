@@ -1,7 +1,7 @@
 """Canonical client-tool argument schemas; not a second tool execution engine."""
 from pydantic import Field, model_validator
 
-from backend.models import Action, StrictModel, WeightChange
+from .models import Action, StrictModel, WeightChange
 
 
 class GetSessionState(StrictModel):

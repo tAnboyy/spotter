@@ -7,8 +7,8 @@ from fastapi.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 
 from backend.app import CATALOG, create_app
-from backend.models import CreateSession, Event, Preferences, SnapshotFrame
-from backend.store import Store, StoreError
+from backend.spotter.models import CreateSession, Event, Preferences, SnapshotFrame
+from backend.spotter.store import Store, StoreError
 
 
 @pytest.fixture
@@ -159,7 +159,7 @@ def test_reject_empty_plan(store):
 
 
 def test_http_snapshot_contract_and_voice_not_configured(tmp_path, monkeypatch):
-    from backend.models import Snapshot
+    from backend.spotter.models import Snapshot
     monkeypatch.delenv('ELEVENLABS_API_KEY', raising=False)
     monkeypatch.delenv('ELEVENLABS_AGENT_ID', raising=False)
     with TestClient(create_app(str(tmp_path / 'contract.sqlite3'))) as client:

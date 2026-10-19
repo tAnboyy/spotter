@@ -7,8 +7,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from backend.database import Database
-from backend.store import Store
+from .database import Database
+from .store import Store
 
 ROOT = Path(__file__).resolve().parents[1]
 TABLES = {
@@ -49,9 +49,9 @@ def migrate(source: str, destination: str, *, apply: bool = False) -> dict[str, 
 
 
 def main() -> None:
-    load_dotenv(ROOT / 'backend/.env', override=False)
+    load_dotenv(ROOT / '.env', override=False)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source', default=os.environ.get('SPOTTER_DATABASE', str(ROOT / 'backend/data/spotter.sqlite3')))
+    parser.add_argument('--source', default=os.environ.get('SPOTTER_DATABASE', str(ROOT / 'data/spotter.sqlite3')))
     parser.add_argument('--apply', action='store_true', help='Copy records; default only reports source counts')
     args = parser.parse_args()
     destination = os.environ.get('DATABASE_URL', '')

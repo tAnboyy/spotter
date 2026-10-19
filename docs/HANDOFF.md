@@ -105,3 +105,31 @@ Never mark a stage passed based solely on tests or exported bundle. Record brows
 Backend: 14 pytest checks pass. Frontend: typecheck, lint and static web export pass. Browser: full strict routine completes six sets; separate watch tab synchronizes Taken and summary; refresh retains a running rest; alternatives require acceptance; early end retains a partial substituted set. See docs/VALIDATION.md for exact limits. npm dependency audit remains open.
 
 Next backend-owner action: configure the ElevenLabs agent/client tools, then put credentials in ignored backend/.env and launch using README's --env-file command. Next frontend-owner action: validate live web audio/tools after the team creates and configures the ElevenLabs agent, then retry the native voice spike after resolving the Xcode and LiveKit build blockers. Current local services are available at localhost:8000 and localhost:8081; restart them through README commands if unavailable.
+
+
+## October 19 — independent frontend/backend Vercel roots
+
+Current layout supersedes earlier deployment instructions: frontend Root Directory
+mobile; backend Root Directory backend. Each has vercel.json and upload ignores.
+Root vercel.json/pyproject.toml/requirements.txt are removed. Backend pyproject
+selects app:app. Both projects can use ordinary Git integration to the same branch.
+
+Backend runtime modules moved into backend/spotter; backend/app.py is the entrypoint
+facade. Relative imports let the package run within either root. Root run helper
+and backend.app imports remain usable; direct internal imports now use
+backend.spotter.*. Catalog moved to backend/catalog/demo.json and remains the sole
+source; SQL migrations moved to backend/spotter/migrations. Update teammate work
+against these paths instead of recreating root catalog or old implementation files.
+Operator module commands are python -m backend.spotter.migrate_sqlite and
+python -m backend.spotter.snowflake_sync from repository root. Local env/data were
+not moved or uploaded; explicitly configured relative SQLite paths still depend
+on process cwd. Neon remains selected through DATABASE_URL.
+
+Validation: 98 tests passed with disposable local PostgreSQL URL; frontend
+typecheck/lint/export pass; isolated backend copy passes API/session/stream/rest
+checks; contract export has no changes; catalog/SQL bytes preserved. Exact commands
+and limits are in docs/VALIDATION.md. Hosted Vercel transport/Neon/voice/native
+acceptance remains pending. No real-data migration, commit, push or deploy.
+Next owner action: commit all file moves atomically, change the two Vercel project
+roots, clear old overrides, set per-project envs and deploy the new Git commit.
+Full setup: docs/DEPLOYMENT.md.

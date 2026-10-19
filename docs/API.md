@@ -1,6 +1,6 @@
 # API contract, schema version 1
 
-Pydantic models in `backend/models.py` define input/response shapes. Regenerate `contracts/*.schema.json` and `contracts/openapi.json` with `python scripts/export_contracts.py`. The web runtime schemas in `mobile/src/api/schema.ts` validate every consumed snapshot; update them when the producer changes. Set indexes start at 1; times are UTC ISO 8601.
+Pydantic models in `backend/spotter/models.py` define input/response shapes. Regenerate `contracts/*.schema.json` and `contracts/openapi.json` with `python scripts/export_contracts.py`. The web runtime schemas in `mobile/src/api/schema.ts` validate every consumed snapshot; update them when the producer changes. Set indexes start at 1; times are UTC ISO 8601.
 
 ## Routes
 
@@ -95,7 +95,7 @@ The shared app opens muscle selection after sign-in. Create a plan lists weekday
 No HTTP, tool, snapshot or schema-version changes. DATABASE_URL selects Neon
 PostgreSQL, with SQLite retained when unset. Store transactions remain serialized
 using a transaction-scoped advisory lock on PostgreSQL; deduplication and updates
-commit atomically. Migration SQL is tracked in backend/migrations/.
+commit atomically. Migration SQL is tracked in backend/spotter/migrations/.
 
 PostgreSQL rest deadlines reconcile on server snapshot/event access (including
 active streams), without an idle background database scan. With no clients, the

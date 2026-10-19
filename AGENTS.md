@@ -15,7 +15,7 @@ Applies to both developers and every coding assistant working in this repository
 | Owner | Primary files and responsibility |
 |---|---|
 | Thanmay — macOS | `mobile/`, `watch/`, `docs/DEMO.md`, `docs/DEVICE_CHECKS.md`: UI, platform voice adapters, client-tool handlers, native builds, simulator checks |
-| Teammate — Windows | `backend/`, `catalog/`, `agent/`, `contracts/`, `docs/API.md`: state engine, persistence, catalog, agent configuration, schemas, backend tests |
+| Teammate — Windows | `backend/`, `backend/catalog/`, `agent/`, `contracts/`, `docs/API.md`: state engine, persistence, catalog, agent configuration, schemas, backend tests |
 | Shared | `AGENTS.md`, `MASTER_PLAN.md`, `README.md`, `docs/VALIDATION.md`, root configuration: coordination and runbooks |
 
 - Both people may contribute across areas when coordinated. Ownership prevents conflicting edits; it is not an automatic approval gate for every fix. Explicit human assignments override defaults.
@@ -31,7 +31,7 @@ Applies to both developers and every coding assistant working in this repository
 - Platform voice files resolve as `.web.ts[x]` and `.native.ts[x]`; provide the appropriate default export path if tooling requires it. Never import native-only WebRTC packages into web bundles or browser globals into shared/native modules.
 - `watch/`: separate SwiftUI project with a small API client and minimal state. No watch audio streaming in the initial scope.
 - `backend/`: FastAPI + Pydantic, SQLite, one process. Keep HTTP handlers thin; domain transitions belong in the session engine, storage in the persistence layer.
-- `catalog/`: versioned JSON fixtures with stable IDs. `agent/`: prompt, tool schemas and setup instructions. `contracts/`: canonical schemas and examples.
+- `backend/catalog/`: versioned JSON fixtures with stable IDs. `agent/`: prompt, tool schemas and setup instructions. `contracts/`: canonical schemas and examples.
 - Use existing code patterns once implementation exists. Avoid duplicate web/native business logic, premature abstraction and unrelated refactors.
 
 ## Coding conventions

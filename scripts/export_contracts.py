@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from backend.models import (
+from backend.spotter.models import (
     AuthResult,
     CreateResult,
     CreateSession,
@@ -26,8 +26,8 @@ from backend.models import (
     ScheduleUpdate,
 )
 from backend.app import app
-from backend.voice import VoiceRequest, VoiceAuthorization
-from backend.tool_contract import tool_specifications
+from backend.spotter.voice import VoiceRequest, VoiceAuthorization
+from backend.spotter.tool_contract import tool_specifications
 
 if __name__ == "__main__":
     target = ROOT / "contracts"

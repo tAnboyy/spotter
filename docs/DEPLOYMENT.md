@@ -1,126 +1,132 @@
-# Separate Vercel frontend and backend projects
+# Two Vercel projects from one repository
 
-Root `vercel.json` is the frontend configuration. Keep the frontend Vercel
-project's Root Directory at repository root, Framework Other, Node 24.x.
-It installs in mobile/, exports the website and serves mobile/dist.
-Set EXPO_PUBLIC_API_URL to the backend HTTPS domain and
-EXPO_PUBLIC_GOOGLE_CLIENT_ID to the Google web client ID. Public values are
-baked into each export; rebuild after changes.
+Each application is now a self-contained Vercel root. Both projects connect to
+this same Git repository and production branch. No alternate config flag, staging
+copy or repository-root deployment is needed.
 
-## Backend configuration
+## Project settings
 
-`backend/vercel.json` is an alternate configuration, used **from repository root**.
-Root `pyproject.toml` selects backend.app:app and root requirements.txt forwards
-to backend/requirements.txt. Keeping the repository as build root preserves
-backend package imports, catalog/demo.json and migration assets.
+In Vercel, import this repository twice (or update the two existing projects).
+Under Settings → Build and Deployment, use:
 
-Deploy to your separate backend project explicitly with Vercel CLI:
+| Setting | Frontend project | Backend project |
+| --- | --- | --- |
+| Root Directory | `mobile` | `backend` |
+| Framework Preset | Other | FastAPI |
+| Install | `npm ci` | `python -m pip install -r requirements.txt` |
+| Build | `node scripts/check_web_deploy.mjs && npm run export:web` | No custom build |
+| Output | `dist` | Default |
+| Config | `mobile/vercel.json` | `backend/vercel.json` |
 
-```sh
-npx vercel --project YOUR_BACKEND_PROJECT --local-config backend/vercel.json --prod
-```
+Clear old project-level install/build/output overrides; the configs provide these
+settings. Frontend Node version is 24.x. Root-level vercel.json, pyproject.toml and
+requirements.txt have been removed to prevent selecting the wrong app. Backend
+pyproject.toml selects `app:app`. Backend imports, catalog and SQL migrations all
+live within its root. Including source files outside either root is unnecessary.
 
-Replace YOUR_BACKEND_PROJECT with the backend project name or ID. Keep that
-project's Root Directory at repository root too. Do not run this command from
-backend/, and do not point the frontend project at this alternate configuration.
-No deployment is performed by adding the file.
+Reconnect the backend project's Git integration if you disconnected it for the
+previous CLI workflow. Connect both projects to the same production branch.
+After committing and pushing this migration, verify the new commit is selected
+for each deployment; redeploying an older commit does not include the new layout.
+Git-triggered deployments do not upload local Pods or virtual environments.
+Per-app .vercelignore files also exclude generated native projects, environments,
+local database files and caches from CLI uploads.
 
-Important: a nested vercel.json does not automatically select itself for a Git
-push when the project root is the repository. A normal Git deployment still
-reads root vercel.json (the frontend). Use the explicit CLI command for backend
-releases, and disable automatic Git deployments on the backend project if linked
-so it does not accidentally build the frontend. A Git-based backend release would
-need CI that explicitly selects the alternate configuration.
+Reference: [Vercel monorepos](https://vercel.com/docs/monorepos).
 
-Remove saved npm/Expo install/build/output overrides from the backend project;
-its alternate configuration installs Python requirements and selects FastAPI.
-Frontend settings remain unchanged.
+## Environment variables
 
-Reference: [Vercel CLI --local-config](https://vercel.com/docs/cli/global-options#local-config).
-
-## Backend environment variables
-
-Set these in Vercel for the deployment environment:
+Set these in the frontend project for Production (and Preview if used):
 
 | Variable | Value |
 | --- | --- |
-| DATABASE_URL | Neon PostgreSQL URL with generated SSL parameters |
-| GOOGLE_CLIENT_ID | Google OAuth web client ID |
+| EXPO_PUBLIC_API_URL | Backend HTTPS origin, without /docs or /health |
+| EXPO_PUBLIC_GOOGLE_CLIENT_ID | Google OAuth web client ID |
+
+The export validates these variables and bakes them into its JavaScript. Rebuild
+after changes. Never put database URLs or provider secrets in public variables.
+
+Set these in the backend project:
+
+| Variable | Value |
+| --- | --- |
+| DATABASE_URL | Neon PostgreSQL connection string with generated SSL parameters |
+| GOOGLE_CLIENT_ID | Same Google web client ID |
 | ELEVENLABS_API_KEY | Private provider key |
 | ELEVENLABS_AGENT_ID | Published agent ID |
-| SPOTTER_CORS_ORIGINS | Exact frontend origin(s), comma-separated |
+| SPOTTER_CORS_ORIGINS | Exact frontend HTTPS origins, comma-separated, no trailing slash |
 
-Use Neon for this deployment; SQLite requires a persistent filesystem. Do not
-configure a local SQLite path as the deployed storage. No EXPO_PUBLIC variables
-are required to deploy the backend. On the separately hosted frontend, point
-EXPO_PUBLIC_API_URL to the backend's HTTPS domain.
+Production must use Neon, not SQLite on an ephemeral filesystem. Backend loads
+its local .env only for development, without overriding hosting environment values.
+Local .env files and SQLite backups were not moved, uploaded or imported.
 
-Deploy the frontend through Git and the backend with the explicit CLI command above. Verify `/health`,
-`/catalog` and `/docs`, then authenticated session/profile requests and Neon
-persistence. WebSocket transport, full workout and live voice require hosted
-validation; a successful build does not prove them.
+Add the frontend production origin to the Google OAuth client's authorized
+JavaScript origins. Preview origins need explicit Google and CORS setup too.
+After changing backend environment settings, create a new backend deployment.
 
-Reference: [Vercel FastAPI guide](https://vercel.com/docs/frameworks/backend/fastapi).
+## Validation after deployment
 
-### Neon and existing records
+1. Deploy backend; verify /health returns JSON, /catalog returns 18 exercises and
+   /docs loads FastAPI's API UI. Check Vercel runtime logs for startup errors.
+2. Deploy frontend; verify / and a direct /watch reload work.
+3. Confirm catalog preflight succeeds from the actual frontend origin. A Vercel
+   NOT_FOUND response means routing/deployment must be fixed before CORS.
+4. Sign in with Google, save a profile, start a workout, complete a set, and wait
+   for rest expiry. Reload and confirm saved state remains in Neon.
+5. Verify live synchronization between workout and watch tabs, reconnects, actual
+   voice input/output and cleanup. These hosted checks remain separate from tests.
 
-The backend loads ignored `backend/.env`, preserving hosting environment values.
-Selection priority is an explicit `create_app(database=...)` argument, nonempty
-`DATABASE_URL`, `SPOTTER_DATABASE`, then the default SQLite file. A bad PostgreSQL
-connection fails startup instead of silently falling back. Install the pinned
-backend requirements first. Store initialization applies versioned SQL from
-`backend/migrations/` and records it in `schema_migrations`.
+A successful static export or local WebSocket test does not prove Vercel runtime
+WebSocket support or live voice acceptance.
 
-To transfer existing records, stop Spotter processes writing to SQLite and back up
-the file. From repository root:
+## Local commands and compatibility
 
-```sh
-.venv/bin/python -m backend.migrate_sqlite
-.venv/bin/python -m backend.migrate_sqlite --apply
-```
+From repository root, existing `python scripts/run_backend.py` and imports from
+`backend.app` remain available through a thin entrypoint. Runtime implementation
+modules now live in backend/spotter, with relative package imports. Update direct
+internal imports to backend.spotter.*. From backend/, the independent entrypoint
+is `python -m uvicorn app:app --host 127.0.0.1 --port 8000`.
 
-On Windows replace `.venv/bin/python` with `.\.venv\Scripts\python.exe`.
-The default command reports only source counts. `--apply` creates the schema and
-copies all four tables in one transaction, retaining IDs, token hashes, saved
-state, event deduplication records and schedules. It refuses a nonempty target;
-it never merges, overwrites or deletes source data. Transfer existing personal
-records only with the owner's approval. To start fresh, launch against Neon
-without importing; local records stay in SQLite. To return to SQLite, clear
-`DATABASE_URL` and restart. Later Neon changes do not sync back automatically.
+Default SQLite location is backend/data/spotter.sqlite3, resolved from the service
+files. If you explicitly set SPOTTER_DATABASE to a relative path, it remains
+relative to the process working directory; use a suitable path for that command.
+DATABASE_URL takes precedence. Existing local databases and ignored environment
+files remain intact. Backend catalog's sole runtime source is now
+backend/catalog/demo.json; edit that file rather than maintaining a duplicate.
 
-PostgreSQL transactions use one transaction-scoped advisory lock, preserving
-SQLite's serialized store behavior across connections and working with Neon's
-transaction pooler. This intentionally targets the current small app rather than
-high-throughput scaling. Connections close after each transaction with bounded
-connection, lock and statement waits.
+Install from repo root with `python -m pip install -r backend/requirements.txt`.
+Run regression tests with `python -m pytest backend/tests -q`. Routine tests
+isolate themselves from developer/cloud DB credentials. Actual PostgreSQL cases
+run only when SPOTTER_TEST_DATABASE_URL points to a disposable localhost database
+named spotter_test*. Those tests erase its application tables between cases.
 
-There is no background PostgreSQL rest scan: server snapshot/action requests
-reconcile persisted deadlines, including the snapshots fetched by active streams.
-When everyone disconnects, reconciliation waits for the next request. Active
-streams still query about twice per second; close workout tabs to allow Neon to
-become idle. SQLite retains its local worker. No client can skip a deadline.
+## Existing SQLite records and Neon
 
-The optional Snowflake exporter still reads SQLite only. It will not export new
-PostgreSQL events after switching to Neon; a PostgreSQL analytics adapter remains
-a separate handoff.
-
-Routine tests ignore developer database credentials:
+No personal records are transferred by this layout change. To migrate records,
+stop SQLite writers and preserve a backup first. From repository root:
 
 ```sh
-.venv/bin/python -m pytest backend/tests -q
+python -m backend.spotter.migrate_sqlite
+python -m backend.spotter.migrate_sqlite --apply
 ```
 
-For PostgreSQL checks, set `SPOTTER_TEST_DATABASE_URL` to a disposable localhost
-database named `spotter_test*`; these tests erase its application tables between
-cases and reject cloud URLs. macOS example:
+The first command reports source counts. Apply copies all four application tables
+in one transaction, retaining IDs, state, event deduplication records and token
+hashes. It refuses a nonempty target; the source is read-only and is not deleted.
+The pending real-data transfer still requires the owner's explicit approval.
+Returning to SQLite requires clearing DATABASE_URL and restarting; cloud changes
+do not synchronize back to the old file.
 
-```sh
-SPOTTER_TEST_DATABASE_URL=postgresql://USER@localhost:5432/spotter_test .venv/bin/python -m pytest backend/tests -q
-```
+PostgreSQL transactions retain the serialized store model via a transaction-scoped
+advisory lock. This targets the current small app, not high-throughput scaling.
+Connections close after each transaction with bounded waits. Schema changes are
+tracked in backend/spotter/migrations and schema_migrations.
 
-PowerShell:
+PostgreSQL has no idle rest scan: server reads/actions and active streams reconcile
+persisted deadlines. When disconnected, reconciliation waits for the next request.
+Active streams still poll; close workout tabs to allow Neon to become idle.
+SQLite retains its local worker. Client requests cannot skip rest deadlines.
 
-```powershell
-$env:SPOTTER_TEST_DATABASE_URL='postgresql://USER@localhost:5432/spotter_test'
-.\.venv\Scripts\python.exe -m pytest backend/tests -q
-```
+Snowflake export remains SQLite-only; its updated command is
+`python -m backend.spotter.snowflake_sync --dry-run`. It does not export new Neon
+events. See docs/SNOWFLAKE.md for provider setup and validation boundaries.

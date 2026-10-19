@@ -28,14 +28,14 @@ py -m venv .venv
 .\.venv\Scripts\python.exe scripts/run_backend.py
 ```
 
-Backend listens on http://127.0.0.1:8000. Interactive API at `/docs`. No Docker/database account required. By default, data persists under `backend/data/` and is ignored by Git. To use Neon, add its PostgreSQL URL as `DATABASE_URL` in `backend/.env`; see [database setup and migration](docs/DEPLOYMENT.md#neon-and-existing-records). Existing environment settings take priority over `.env`. Run one process; do not pass multiple uvicorn workers.
+Backend listens on http://127.0.0.1:8000. Interactive API at `/docs`. No Docker/database account required. By default, data persists under `backend/data/` and is ignored by Git. To use Neon, add its PostgreSQL URL as `DATABASE_URL` in `backend/.env`; see [database setup and migration](docs/DEPLOYMENT.md#existing-sqlite-records-and-neon). Existing environment settings take priority over `.env`. Run one process; do not pass multiple uvicorn workers.
 
 ## Web app
 
-For hosted setup, see [separate Vercel projects](docs/DEPLOYMENT.md). Root
-`vercel.json` deploys the frontend. `backend/vercel.json` is the backend alternate
-config, selected explicitly from repository root with the Vercel CLI. The backend
-uses Neon (`DATABASE_URL`); the frontend API URL points to its HTTPS domain.
+For hosted setup, see [two Vercel projects](docs/DEPLOYMENT.md). Set the frontend
+project's Root Directory to `mobile` and the backend project's to `backend`.
+Each folder has its own deployment configuration; both projects can deploy from
+the same Git branch. The frontend API URL points to the backend's HTTPS domain.
 
 In another terminal:
 
@@ -87,7 +87,7 @@ Use the virtualenv Python equivalents on each OS. `contracts/` contains exported
 
 ## Ownership
 
-Thanmay: `mobile/`, `watch/`, native builds and demos. Teammate: `backend/`, `catalog/`, `agent/`, `contracts/`. Initial backend foundation is isolated for teammate takeover. Read `AGENTS.md` before edits.
+Thanmay: `mobile/`, `watch/`, native builds and demos. Teammate: `backend/`, `backend/catalog/`, `agent/`, `contracts/`. Initial backend foundation is isolated for teammate takeover. Read `AGENTS.md` before edits.
 
 Scope excludes music, sensors, dashboard, automatic form/rep detection and physical locked-phone guarantees. Gym and coaching catalog are demo content with professional review pending.
 
@@ -109,4 +109,4 @@ Verification command for local weekday/week-wrap behavior: `node scripts/check_s
 
 ## Snowflake workout analytics
 
-Optional batch export sends allowlisted accepted workout events to Snowflake for equipment Taken reports, completed-set counts and average set duration. SQLite continues to run workouts. See [setup and demo queries](docs/SNOWFLAKE.md). Validate extraction with `python -m backend.snowflake_sync --dry-run`; live upload requires a configured Snowflake connection.
+Optional batch export sends allowlisted accepted workout events to Snowflake for equipment Taken reports, completed-set counts and average set duration. SQLite continues to run workouts. See [setup and demo queries](docs/SNOWFLAKE.md). Validate extraction with `python -m backend.spotter.snowflake_sync --dry-run`; live upload requires a configured Snowflake connection.

@@ -8,10 +8,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.app import CATALOG, create_app
-from backend.database import Database
-from backend.migrate_sqlite import TABLES, migrate
-from backend.models import CreateSession, ProfileUpdate, ScheduleUpdate
-from backend.store import Store, StoreError
+from backend.spotter.database import Database
+from backend.spotter.migrate_sqlite import TABLES, migrate
+from backend.spotter.models import CreateSession, ProfileUpdate, ScheduleUpdate
+from backend.spotter.store import Store, StoreError
 from backend.tests import test_session as sessions
 from backend.tests import test_set_tracking as tracking
 
