@@ -270,3 +270,9 @@ User requested English/Spanish spoken coaching selection in trainer customizatio
 ## Scope addition — Snowflake analytics, October 11, 2026
 
 User selected Snowflake workout analytics. Keep SQLite as the transactional workout store; add an explicit operator batch export of allowlisted accepted workout events to Snowflake with equipment-report/completed-set insights. No workout API contract or client changes. Setup and demonstration: docs/SNOWFLAKE.md. Live Snowflake validation is a separate acceptance gate.
+
+
+Hosting correction (October 19): the human clarified that this Vercel project is backend-only. Root configuration now selects FastAPI/backend.app:app and Python requirements. Expo hosting is separate. Vercel Root Directory must be repository root; hosted transport and full-workout acceptance remain pending. This supersedes earlier frontend-only Vercel instructions.
+
+
+Final hosting clarification (October 19): both frontend and backend target separate Vercel projects. Root vercel.json remains frontend; backend/vercel.json is selected explicitly with CLI --local-config from repository root. This supersedes the backend-only correction. Git backend auto-deployment is not automatically configured by a nested file. See docs/DEPLOYMENT.md. Hosted acceptance remains pending.

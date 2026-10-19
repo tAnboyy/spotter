@@ -355,3 +355,17 @@ Next: publish the changed config/docs through the user's normal Git flow,
 keep Vercel Root Directory at repository root and redeploy. If install still
 fails, capture effective working directory/npm version and lockfile presence
 from the hosted environment. No commit, push, deployment or cloud-data changes.
+
+
+## Vercel backend configuration correction — October 19
+
+Human clarified backend-only target. Replaced Expo/npm root vercel.json with FastAPI, Python dependency install, empty build command and default output directory. Added root requirements.txt forwarding to pinned backend requirements. Existing pyproject entrypoint retained. Updated deployment runbook, README and plan. No API behavior/contract changes.
+
+PASS: JSON/TOML configuration parsing and git diff --check. NOT RUN: Vercel hosted build, API/Neon/voice/WebSocket acceptance. Next: clear Vercel Root Directory to repository root, remove saved frontend overrides, publish these changes through the human Git workflow and deploy the new commit. No commit/push/deployment or personal-data transfer performed.
+
+
+## Separate Vercel configurations — October 19
+
+Restored root vercel.json byte-for-byte to the checked-in frontend configuration. Added backend/vercel.json as an alternate FastAPI config for CLI selection from repository root; retained root pyproject entrypoint and requirements forwarding. Updated README/deployment/plan to document separate projects and explicit backend config selection. No runtime code, client contracts, data or provider changes.
+
+PASS: root config matches HEAD; JSON/TOML parsing, dependency include paths and git diff --check. NOT RUN: actual Vercel backend/frontend deployments. Root frontend install/export was validated earlier; unchanged commands were not repeated. Backend project uses --local-config backend/vercel.json from repo root, not backend/ as root. Nested config alone does not configure Git deployments. No commit, push or deploy.

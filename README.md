@@ -32,9 +32,10 @@ Backend listens on http://127.0.0.1:8000. Interactive API at `/docs`. No Docker/
 
 ## Web app
 
-For hosted web setup, see [Vercel deployment](docs/DEPLOYMENT.md). The root
-`vercel.json` exports the Expo website; FastAPI runs separately with Neon
-PostgreSQL (`DATABASE_URL`) or a SQLite file on a persistent host.
+For hosted setup, see [separate Vercel projects](docs/DEPLOYMENT.md). Root
+`vercel.json` deploys the frontend. `backend/vercel.json` is the backend alternate
+config, selected explicitly from repository root with the Vercel CLI. The backend
+uses Neon (`DATABASE_URL`); the frontend API URL points to its HTTPS domain.
 
 In another terminal:
 
