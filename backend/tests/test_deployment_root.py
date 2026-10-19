@@ -17,10 +17,14 @@ def test_backend_runs_as_an_isolated_deployment_root(tmp_path):
     script = '''
 import os, sys
 sys.path.insert(0, os.getcwd())
+import importlib, tomllib
 from datetime import datetime, timedelta
 from uuid import uuid4
 from fastapi.testclient import TestClient
-from app import app, create_app
+with open('pyproject.toml', 'rb') as config:
+    module_name, instance = tomllib.load(config)['tool']['vercel']['entrypoint'].split(':')
+module = importlib.import_module(module_name)
+app, create_app = getattr(module, instance), module.create_app
 
 with TestClient(app) as client:
     assert client.get('/health').status_code == 200

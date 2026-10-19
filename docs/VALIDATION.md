@@ -399,3 +399,21 @@ and backend Root Directory backend, clear old npm/Expo overrides on backend,
 connect both projects to the same Git branch and deploy that new commit. Use
 frontend/public and backend/private environment settings in docs/DEPLOYMENT.md.
 No commit, push, deployment or external configuration changes performed here.
+
+
+## Backend empty Vercel deployment — October 19
+
+Read-only CLI inspection confirmed spotter-backend has Root Directory backend,
+FastAPI preset, and production domain spotter-backend-seven.vercel.app assigned
+to dpl_2rAGoseNxyBpB1vyP6WRibQ4Gmst. Its build listing contains only '.' [0ms]
+and no Python function. No remote settings or deployments changed.
+
+Removed backend/vercel.json's explicit empty buildCommand and null outputDirectory;
+backend/pyproject.toml now selects spotter.app:app directly instead of the conditional
+compatibility facade. Updated isolated deployment-root test to import the exact
+configured module/instance. Frontend configuration is unchanged.
+
+Next: publish the new commit, clear backend dashboard build/output overrides,
+redeploy without cache, then verify a Python function and /health JSON. Exact
+cause of the previous empty remote build has not been reproduced locally; this
+configuration correction still needs hosted verification. No cloud data copied.

@@ -21,7 +21,7 @@ Under Settings → Build and Deployment, use:
 Clear old project-level install/build/output overrides; the configs provide these
 settings. Frontend Node version is 24.x. Root-level vercel.json, pyproject.toml and
 requirements.txt have been removed to prevent selecting the wrong app. Backend
-pyproject.toml selects `app:app`. Backend imports, catalog and SQL migrations all
+pyproject.toml selects `spotter.app:app` directly, where the FastAPI instance is created. Backend imports, catalog and SQL migrations all
 live within its root. Including source files outside either root is unnecessary.
 
 Reconnect the backend project's Git integration if you disconnected it for the
@@ -130,3 +130,11 @@ SQLite retains its local worker. Client requests cannot skip rest deadlines.
 Snowflake export remains SQLite-only; its updated command is
 `python -m backend.spotter.snowflake_sync --dry-run`. It does not export new Neon
 events. See docs/SNOWFLAKE.md for provider setup and validation boundaries.
+
+
+Backend empty-output troubleshooting: the backend config intentionally omits
+buildCommand and outputDirectory. Do not set Build Command to an enabled empty
+override or set a static output directory. Clear dashboard overrides, deploy a
+new commit without cache, and confirm deployment outputs include a Python
+function. A Ready deployment containing only a zero-millisecond '.' build does
+not establish API readiness. The frontend configuration is unrelated to this fix.
