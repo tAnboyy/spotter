@@ -22,8 +22,8 @@ export function LandingScreen({ checking, signingIn, googleEnabled, onToken }: {
           {checking ? <View style={s.loading}><ActivityIndicator color={colors.blue} /><Text style={s.note}>Getting things ready…</Text></View> : <GoogleSignInButton disabled={signingIn || !googleEnabled} onToken={onToken} />}
           {signingIn && <View accessibilityLiveRegion="polite" style={s.loading}><ActivityIndicator color={colors.blue} /><Text style={s.note}>Signing you in…</Text></View>}
           <Text style={s.note}>{!checking && !googleEnabled ? 'Sign-in is being set up. Please check back soon.' : 'Sign in to save your name and your workout plan.'}</Text>
-          <Link href="https://spotter-privacy.mellowcabin4.chatgpt.site" style={[s.note, { color: colors.blue, textDecorationLine: 'underline' }]}>Privacy policy</Link>
-          <Link href="https://spotter-privacy.mellowcabin4.chatgpt.site/terms/" style={[s.note, { color: colors.blue, textDecorationLine: 'underline' }]}>Terms of service</Link>
+          <Link href="https://spotter-sandy-beta.vercel.app/privacy" style={[s.note, { color: colors.blue, textDecorationLine: 'underline' }]}>Privacy policy</Link>
+          <Link href="https://spotter-sandy-beta.vercel.app/terms" style={[s.note, { color: colors.blue, textDecorationLine: 'underline' }]}>Terms of service</Link>
         </View>
         <View style={s.promise}><Text style={s.promiseMark}>↗</Text><Text style={s.note}>Built around you. Ready for the next set.</Text></View>
       </View>
