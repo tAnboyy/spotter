@@ -417,3 +417,51 @@ Next: publish the new commit, clear backend dashboard build/output overrides,
 redeploy without cache, then verify a Python function and /health JSON. Exact
 cause of the previous empty remote build has not been reproduced locally; this
 configuration correction still needs hosted verification. No cloud data copied.
+
+
+## Public privacy policy — October 20, 2026
+
+Owner: Thanmay / macOS. User authorized page creation and deployment and supplied
+mdasthanmay@gmail.com as the privacy/deletion contact.
+
+- PASS: inspected current Google identity, profile/session storage, voice-context
+  payloads, persistence and optional Snowflake export before drafting disclosures.
+- PASS: Python HTMLParser/static assertions verified eight policy sections,
+  contact/date, identical root and /privacy content, and no scripts.
+- PASS: mobile `npm run typecheck` after adding the policy link to sign-in.
+- PASS: Sites access set to public; version 1 deployment returned succeeded at
+  https://spotter-privacy.mellowcabin4.chatgpt.site
+  Site source commit: 468dd886d4174792a33f90a205228b90e2ed6f8a.
+- NOT RUN: rendered browser/responsive checks; local Google Chrome launch was
+  unavailable. Sites success verifies deployment, not Google OAuth approval.
+- NOT RUN: frontend Vercel deployment; the new sign-in policy link is local only.
+
+Handoff: page source and hosting identity live in sites/spotter-privacy/. That
+subdirectory has its own Sites source repository; application repository changes
+were not committed or pushed. Use the public root URL as the privacy policy URL.
+For Google brand verification, separately confirm homepage linkage and domain
+ownership requirements. ElevenLabs retention/training settings were not inspected
+in the provider dashboard; the policy makes no zero-retention guarantee.
+Next: deploy the frontend link with the next app release and update the policy
+when actual retention or provider settings change. No user records were changed.
+
+
+## Public Terms of Service — October 20, 2026
+
+Owner: Thanmay / macOS. Added sites/spotter-privacy/dist/terms/index.html with
+matching styling, account and acceptable-use terms, fitness/AI limitations,
+privacy/deletion links, service availability and contact details. Added navigation
+between public legal pages and a local sign-in Terms of Service link.
+
+- PASS: Python HTMLParser assertions: ten terms sections, contact, no scripts,
+  matching root/privacy policy copies, legal page navigation.
+- PASS: mobile `npm run typecheck`; `git diff --check`.
+- PASS: public Sites version 2 returned deployment succeeded; pushed source
+  commit 46f6fd519f2182bd034b115ba583037b224b4761.
+  Terms URL: https://spotter-privacy.mellowcabin4.chatgpt.site/terms/
+- NOT RUN: rendered browser QA, Google brand approval, frontend Vercel deployment.
+
+Next: paste the terms URL in Google’s Application terms of service link field.
+The mobile sign-in link remains local until the next frontend deployment.
+Application repo changes were not committed/pushed; only the separate Sites
+source repository was published. No contract or backend changes.

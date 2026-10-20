@@ -138,3 +138,23 @@ override or set a static output directory. Clear dashboard overrides, deploy a
 new commit without cache, and confirm deployment outputs include a Python
 function. A Ready deployment containing only a zero-millisecond '.' build does
 not establish API readiness. The frontend configuration is unrelated to this fix.
+
+
+## Public privacy policy
+
+Published separately with Sites on October 20, 2026:
+https://spotter-privacy.mellowcabin4.chatgpt.site
+
+Source: sites/spotter-privacy/dist/index.html; hosting identity:
+sites/spotter-privacy/.openai/hosting.json. The page is public without sign-in.
+Privacy/deletion contact: mdasthanmay@gmail.com. The sign-in screen links to this
+URL in local source; publish the frontend to make that link visible in production.
+Google brand verification remains separate: verify homepage linkage and any
+required domain ownership; a working policy URL alone does not establish approval.
+
+Terms of Service (published October 20, 2026):
+https://spotter-privacy.mellowcabin4.chatgpt.site/terms/
+
+Source: sites/spotter-privacy/dist/terms/index.html. Both legal pages link to one
+another. Paste this URL into Application terms of service link. The app sign-in
+terms link is in local source and awaits the next frontend deployment.
